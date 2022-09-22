@@ -35,6 +35,7 @@ class App(QFrame):
         #Create Tabs
         self.tabbar = QTabBar(movable=True, tabsClosable=True)
         self.tabbar.tabCloseRequested.connect(self.CloseTab)
+        self.tabbar.tabBarClicked.connect(self.SwitchTab)
 
 
         self.tabbar.setCurrentIndex(0)
@@ -97,8 +98,19 @@ class App(QFrame):
 
         #Set the tab at top of screen
         self.tabbar.addTab("New Tab")
-       # self.tabbar.setTabData("tab"+ str(i))
+        self.tabbar.setTabData(i,"tab"+ str(i))
         self.tabbar.setCurrentIndex(i)
+
+        self.tabCount +=1
+
+    def SwitchTab(self, i):
+        tab_data = self.tabbar.tabData(i)
+        print("tab:", tab_data)
+
+        tab_content = self.findChild(QWidget,tab_data)
+        self.container.layout.setCurrentWidget(tab_content)
+
+
 
         pass
 
