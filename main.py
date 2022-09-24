@@ -48,6 +48,7 @@ class App(QFrame):
 
         #Create AddressBar
         self.Toolbar = QWidget()
+        self.Toolbar.setObjectName("Toolbar")
         self.ToolbarLayout = QHBoxLayout()
         self.addressbar = AddressBar()
 
@@ -135,8 +136,12 @@ class App(QFrame):
         self.tabCount +=1
 
     def SwitchTab(self, i):
-        tab_data = self.tabbar.tabData(i)
-        print("tab:", tab_data)
+        if self.tabbar.tabData(i):
+            tab_data = self.tabbar.tabData(i)["object"]
+            tab_content = self.findChild(QWidget, tab_data)
+            self.container.layout.setCurrentWidget(tab_content)
+            new_url = tab_content.content.url().toString()
+            self.addressbar.setText(new_url)
 
         tab_content = self.findChild(QWidget,tab_data)
         self.container.layout.setCurrentWidget(tab_content)
@@ -217,5 +222,8 @@ class App(QFrame):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = App()
+
+    with open("main.style.css", "r")as style:
+        app.setStyleSheet(style.read())
 
     sys.exit(app.exec_())
