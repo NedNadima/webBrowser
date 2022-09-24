@@ -111,6 +111,8 @@ class App(QFrame):
 
         self.tabs[i].content.titleChanged.connect(lambda: self.SetTabContent(i, "title"))
         self.tabs[i].content.iconChanged.connect(lambda: self.SetTabContent(i, "icon"))
+        self.tabs[i].content.urlChanged.connect(lambda: self.SetTabContent(i, "url"))
+
 
         #Add webview to tabs layout
         self.tabs[i].layout.addWidget(self.tabs[i].content)
@@ -144,7 +146,7 @@ class App(QFrame):
         print(text)
 
         i = self.tabbar.currentIndex()
-        tab = self.tabbar.tabData(i)
+        tab = self.tabbar.tabData(i)["object"]
         wv = self.findChild(QWidget, tab).content
 
         if "http" not in text:
@@ -167,6 +169,13 @@ class App(QFrame):
 
         count = 0
         running = True
+
+        current_tab = self.tabbar.tabData(self.tabbar.currentIndex())["object"]
+
+        if current_tab == tab_name and type == "url":
+            new_url = self.findChild(QWidget, tab_name).content.url().toString()
+            self.addressbar.setText(new_url)
+            return False
 
         while running:
             tab_data_name = self.tabbar.tabData(count)
