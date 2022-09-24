@@ -227,3 +227,5 @@ if __name__ == "__main__":
         app.setStyleSheet(style.read())
 
     sys.exit(app.exec_())
+
+    #Thank you for reading :)
