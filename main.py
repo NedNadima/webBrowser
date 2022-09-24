@@ -56,12 +56,29 @@ class App(QFrame):
 
         #New tab button
         self.AddTabButton = QPushButton("+")
-
         self.addressbar.returnPressed.connect(self.BrowseTo)
 
         self.AddTabButton.clicked.connect(self.AddTab)
 
+        #Set Toolbar Buttons
+        self.BackButton = QPushButton("<")
+        self.BackButton.clicked.connect(self.GoBack)
+
+        self.ForwardButton = QPushButton(">")
+        self.ForwardButton.clicked.connect(self.GoForward)
+
+        self.ReloadButton = QPushButton("R")
+        self.ReloadButton.clicked.connect(self.ReloadPage)
+
+
+        #Build toolbar
+        self.Toolbar.setLayout(self.ToolbarLayout)
+        self.ToolbarLayout.addWidget(self.BackButton)
+        self.ToolbarLayout.addWidget(self.ForwardButton)
+        self.ToolbarLayout.addWidget(self.ReloadButton)
+        self.ToolbarLayout.addWidget(self.addressbar)
         self.ToolbarLayout.addWidget(self.AddTabButton)
+
 
         #set main view
         self.container = QWidget()
@@ -168,6 +185,25 @@ class App(QFrame):
                 running = False
             else:
                 count +=1
+
+    def GoBack(self):
+        activeIndex = self.tabbar.currentIndex()
+        tab_name = self.tabbar.tabData(activeIndex)["object"]
+        tab_content = self.findChild(QWidget, tab_name).content
+        tab_content.back()
+
+
+    def GoForward(self):
+        activeIndex = self.tabbar.currentIndex()
+        tab_name = self.tabbar.tabData(activeIndex)["object"]
+        tab_content = self.findChild(QWidget, tab_name).content
+        tab_content.forward()
+
+    def ReloadPage(self):
+        activeIndex = self.tabbarcurrentIndex()
+        tab_name = self.tabbar.tabData(activeIndex)["object"]
+        tab_content = self.findChild(QWidget, tab_name).content
+        tab_content.reload()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
